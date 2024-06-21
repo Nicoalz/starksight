@@ -38,6 +38,15 @@ const Header: React.FC = () => {
           w-3/4 sm:w-1/2 lg:w-1/3 min-h-screen
           sm:hidden`} // Only show and animate on mobile
         >
+          <Link
+            onClick={() => {
+              setIsMenuOpen(false);
+            }}
+            className="mr-4"
+            href={"/"}
+          >
+            STARKSIGHT
+          </Link>
           {links.map((link, index) => (
             <Link
               key={index}
@@ -55,6 +64,15 @@ const Header: React.FC = () => {
         <nav // Desktop menu
           className={`hidden sm:flex items-center justify-center`}
         >
+          <Link
+            onClick={() => {
+              setIsMenuOpen(false);
+            }}
+            className="mr-16 font-black text-6xl mx-auto w-fit text-custom-red"
+            href={"/"}
+          >
+            STARKSIGHT
+          </Link>
           {links.map((link, index) => (
             <Link
               key={index}

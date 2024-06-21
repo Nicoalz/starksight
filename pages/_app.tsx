@@ -9,6 +9,8 @@ import { StarknetWalletConnectors } from "@dynamic-labs/starknet";
 
 import { StarknetIcon, EthereumIcon } from "@dynamic-labs/iconic";
 
+import { VoyagerProvider } from "@/context/voyager-context";
+
 function MyApp({ Component, pageProps }: AppProps) {
   const EthWallets = {
     label: { icon: <EthereumIcon /> },
@@ -42,9 +44,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         overrides: { views: views },
       }}
     >
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <VoyagerProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </VoyagerProvider>
     </DynamicContextProvider>
   );
 }
