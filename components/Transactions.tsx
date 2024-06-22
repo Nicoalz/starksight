@@ -12,7 +12,7 @@ const Transactions: React.FC = () => {
 
   useEffect(() => {
     fetchTxns();
-  }, []);
+  }, [apiUrl]);
 
   const fetchTxns = async () => {
     try {

@@ -28,9 +28,11 @@ export const VoyagerProvider: React.FC<VoyagerProviderProps> = ({ children }) =>
 
   useEffect(() => {
     if (isMainnet) {
+      console.log("Mainnet, url is ", voyagertMainnetAPIurl);
       setApiUrl(voyagertMainnetAPIurl);
       setExplorerUrl(voyagerMainnerExplorer);
     } else {
+      console.log("Testnet, url is ", voyagerTestnetAPIurl);
       setApiUrl(voyagerTestnetAPIurl);
       setExplorerUrl(voyagerTestnetExplorer);
     }

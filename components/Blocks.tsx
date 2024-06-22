@@ -11,7 +11,7 @@ const Blocks: React.FC = () => {
 
   useEffect(() => {
     fetchBlocks();
-  }, []);
+  }, [apiUrl]);
 
   const fetchBlocks = async () => {
     try {

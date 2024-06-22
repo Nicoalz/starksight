@@ -12,7 +12,7 @@ const Tokens: React.FC = () => {
 
   useEffect(() => {
     fetchTokens();
-  }, []);
+  }, [apiUrl]);
 
   const fetchTokens = async () => {
     try {

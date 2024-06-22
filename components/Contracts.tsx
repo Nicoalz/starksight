@@ -3,25 +3,27 @@ import React, { useState, useEffect } from "react";
 import { Contract } from "@/lib/types";
 import { useVoyager } from "@/context/voyager-context";
 import { truncateAddress } from "@/lib/utils";
-
+import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import Link from "next/link";
 const Contracts: React.FC = () => {
+  const { primaryWallet } = useDynamicContext();
   const { apiUrl, explorerUrl, apiKey } = useVoyager();
   const [contractAddress, setContractAddress] = useState<string>("");
   const [contracts, setContracts] = useState<Contract[] | null>(null);
 
   useEffect(() => {
     fetchContracts();
-  }, []);
+  }, [apiUrl]);
 
-  const fetchContracts = async () => {
+  const fetchContracts = async (forcedAddress?: string) => {
     try {
       const endpoint = "/contracts/";
       const headers = {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
       };
-      const response = await axios.get(`${apiUrl}${endpoint}${contractAddress}`, { headers });
+      const address = forcedAddress || contractAddress;
+      const response = await axios.get(`${apiUrl}${endpoint}${address}`, { headers });
       console.log({
         data: response.data,
       });
@@ -51,7 +53,7 @@ const Contracts: React.FC = () => {
 
   return (
     <div className="w-full flex flex-col items-center my-8 bg-blue-500/10 p-6 rounded-xl">
-      <p className="text-2xl my-4 font-bold">Retrieve Contract(s):</p>
+      <p className="text-2xl my-4 font-bold">Retrieve Address(es):</p>
       <div className="flex flex-col items-center">
         <input
           className="border-2 border-gray-300 p-2 w-96 rounded-md text-black"
@@ -59,17 +61,30 @@ const Contracts: React.FC = () => {
           onChange={(e) => {
             setContractAddress(e.target.value);
           }}
-          placeholder="Contract address or Leave empty to get last contracts"
+          placeholder="Account or contract address or Leave empty to get all"
           type="text"
         />
-        <button
-          className="bg-blue-500 text-white p-2 rounded-md mt-2"
-          onClick={() => {
-            fetchContracts();
-          }}
-        >
-          Retrieve
-        </button>
+        <div className="flex justify-center items-center gap-x-4">
+          <button
+            className="bg-blue-500 text-white p-2 rounded-md mt-2"
+            onClick={() => {
+              fetchContracts();
+            }}
+          >
+            Retrieve
+          </button>
+          {primaryWallet?.address && (
+            <button
+              className="bg-blue-500 text-white p-2 rounded-md mt-2"
+              onClick={() => {
+                setContractAddress(primaryWallet.address);
+                fetchContracts(primaryWallet.address);
+              }}
+            >
+              Retrieve my account
+            </button>
+          )}
+        </div>
       </div>
       <div className="w-full flex flex-col justify-center items-center">
         {contracts?.length && (
@@ -108,13 +123,13 @@ const Contracts: React.FC = () => {
                 <span className="text-gray-500 font-light ">Block number:</span> {contract.blockNumber}
               </p>
               <p>
-                <span className="text-gray-500 font-light ">is Account:</span> {contract.isAccount.toString()}
+                <span className="text-gray-500 font-light ">is Account:</span> {contract.isAccount?.toString()}
               </p>
               <p>
-                <span className="text-gray-500 font-light ">is ERC Token:</span> {contract.isErcToken.toString()}
+                <span className="text-gray-500 font-light ">is ERC Token:</span> {contract.isErcToken?.toString()}
               </p>
               <p>
-                <span className="text-gray-500 font-light ">is Proxy:</span> {contract.isProxy.toString()}
+                <span className="text-gray-500 font-light ">is Proxy:</span> {contract.isProxy?.toString()}
               </p>
               <p>
                 <span className="text-gray-500 font-light ">Type:</span> {contract.type}
